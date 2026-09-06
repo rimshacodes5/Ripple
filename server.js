@@ -10,10 +10,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from the public directory using absolute path
+// Serve static files locally
 app.use(express.static(path.join(__dirname, 'public')));
-
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 const missionSchema = {
   type: Type.OBJECT,
@@ -33,6 +31,15 @@ const missionSchema = {
 
 app.post('/api/generate-mission', async (req, res) => {
   try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ 
+        success: false, 
+        error: "GEMINI_API_KEY environment variable is not set on Vercel." 
+      });
+    }
+
+    const ai = new GoogleGenAI({ apiKey });
     const { availableTime, skills, resources, cause, budget, preference } = req.body;
 
     const prompt = `
@@ -58,8 +65,6 @@ app.post('/api/generate-mission', async (req, res) => {
     while (attempts < maxAttempts) {
       try {
         attempts++;
-        console.log(`Calling Gemini API (Attempt ${attempts}/${maxAttempts})...`);
-        
         response = await ai.models.generateContent({
           model: 'gemini-3.6-flash',
           contents: prompt,
@@ -69,14 +74,11 @@ app.post('/api/generate-mission', async (req, res) => {
             temperature: 0.7
           }
         });
-
         break; 
 
       } catch (err) {
         const is503 = err.status === 503 || (err.message && err.message.includes('503'));
-        
         if (is503 && attempts < maxAttempts) {
-          console.log(`503 Google High Demand spike. Retrying in 1.5 seconds...`);
           await new Promise(resolve => setTimeout(resolve, 1500));
         } else {
           throw err;
@@ -93,7 +95,6 @@ app.post('/api/generate-mission', async (req, res) => {
   }
 });
 
-// Serve index.html for root path or fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -102,9 +103,6 @@ module.exports = app;
 
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
-    console.log(`================================================`);
-    console.log(` Ripple Server Active on http://localhost:${PORT}`);
-    console.log(` Model Configured: GEMINI-3.6-FLASH (With Auto-Retry)`);
-    console.log(`================================================`);
+    console.log(`Ripple Server Active on http://localhost:${PORT}`);
   });
 }
