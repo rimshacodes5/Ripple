@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ripple | Micro-Missions for Generosity</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Header with Animated Drop Logo -->
+    <header class="app-header">
+      <div class="logo-container">
+        <svg class="ripple-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle class="ripple-ring ring-3" cx="50" cy="65" r="28" stroke="url(#cyan-grad)" stroke-width="1.5"/>
+          <circle class="ripple-ring ring-2" cx="50" cy="65" r="18" stroke="url(#cyan-grad)" stroke-width="2"/>
+          <circle class="ripple-ring ring-1" cx="50" cy="65" r="8" stroke="url(#cyan-grad)" stroke-width="2.5"/>
+          <path class="water-drop" d="M50 15 C50 15, 38 35, 38 45 C38 51.6 43.4 57 50 57 C56.6 57 62 51.6 62 45 C62 35, 50 15, 50 15 Z" fill="url(#cyan-grad)"/>
+          <defs>
+            <linearGradient id="cyan-grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#38bdf8"/>
+              <stop offset="1" stop-color="#0284c7"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <h1 class="brand-title">Rippl<span class="drop-i">e</span></h1>
+      <p class="brand-tagline">Small acts. Generous moments. Infinite impact.</p>
+    </header>
+
+    <main class="main-layout">
+      <!-- Main Content Card -->
+      <section class="glass-card content-card">
+        
+        <!-- Input Form Section -->
+        <div id="input-section">
+          <h2 class="section-heading">Discover Your Micro-Mission</h2>
+          <p class="section-sub">Tell Ripple what you have on hand, and AI will craft a personalized act of kindness.</p>
+
+          <form id="mission-form" class="mission-form">
+            <div class="form-grid">
+              
+              <div class="form-group">
+                <label for="time">Available Time</label>
+                <select id="time" required>
+                  <option value="15 minutes">15 Minutes</option>
+                  <option value="30 minutes" selected>30 Minutes</option>
+                  <option value="1 hour">1 Hour</option>
+                  <option value="Flexible">Flexible / Anytime</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="budget">Budget Limit</label>
+                <select id="budget" required>
+                  <option value="$0" selected>$0 (Free)</option>
+                  <option value="Under $5">Under $5</option>
+                  <option value="Under $15">Under $15</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="skills">Your Skills & Strengths</label>
+                <input type="text" id="skills" placeholder="e.g., Graphic design, listening, baking, organizing..." required>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="cause">Cause or Focus</label>
+                <input type="text" id="cause" placeholder="e.g., Local neighbors, animals, elderly, education, environment...">
+              </div>
+
+              <div class="form-group full-width">
+                <label for="preference">Location Preference</label>
+                <select id="preference">
+                  <option value="Online / Remote" selected>Online / Remote</option>
+                  <option value="In Person / Local Neighborhood">In Person / Neighborhood</option>
+                  <option value="At Home">At Home</option>
+                </select>
+              </div>
+
+            </div>
+
+            <button type="submit" class="primary-btn">
+              <span>Discover My Mission 💧</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading-state hidden">
+          <div class="liquid-loader">
+            <div class="drop-pulse"></div>
+          </div>
+          <p class="loading-text">Generating your personalized micro-mission...</p>
+        </div>
+
+        <!-- Mission Result Card -->
+        <div id="mission-result" class="mission-result hidden">
+          <div class="mission-header">
+            <span class="mission-badge">Active Mission</span>
+            <h3 id="mission-title" class="mission-title">Mission Title</h3>
+            <div class="mission-meta">
+              <span id="mission-time" class="meta-pill">⏱ 30 mins</span>
+              <span id="mission-cost" class="meta-pill">💰 $0</span>
+            </div>
+          </div>
+
+          <div class="mission-body">
+            <div class="why-box">
+              <strong>Why this fits you:</strong>
+              <p id="mission-why-text">Connecting your inputs to this generous action...</p>
+            </div>
+
+            <div class="steps-box">
+              <h4>Action Steps</h4>
+              <ol id="mission-steps-list" class="steps-list">
+                <!-- Action steps injected here -->
+              </ol>
+            </div>
+          </div>
+
+          <div class="mission-actions">
+            <button id="complete-btn" class="complete-btn">Mark Mission Completed 🎉</button>
+            <button id="share-btn" class="secondary-btn">Share 🔗</button>
+            <button id="reset-btn" class="secondary-btn">Start Another 🔄</button>
+          </div>
+        </div>
+
+        <!-- Mission History Drawer -->
+        <div id="history-section" class="history-section">
+          <h4 class="history-title">Mission History 📜</h4>
+          <ul id="history-list" class="history-list">
+            <!-- Past completed missions render here -->
+          </ul>
+        </div>
+
+      </section>
+
+      <!-- Water Tank / Reservoir Sidebar -->
+      <aside class="glass-card reservoir-card">
+        <h3 class="card-title">Ripple Reservoir</h3>
+        <p class="card-sub">Your collective generosity gauge</p>
+
+        <div class="water-tank-wrapper">
+          <div class="water-tank">
+            <div id="water-fill" class="water-fill" style="height: 20%;">
+              <div class="wave wave-1"></div>
+              <div class="wave wave-2"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span id="stat-missions" class="stat-number">0</span>
+            <span class="stat-label">Missions Done</span>
+          </div>
+          <div class="stat-box">
+            <span id="stat-people" class="stat-number">0</span>
+            <span class="stat-label">Ripples Spread</span>
+          </div>
+        </div>
+
+        <button id="reset-stats-btn" class="reset-stats-btn">Reset Progress 🔄</button>
+      </aside>
+
+    </main>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
