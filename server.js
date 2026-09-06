@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { GoogleGenAI, Type } = require('@google/genai');
 
 const app = express();
@@ -8,7 +9,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+
+// Serve static files from the public directory using absolute path
+app.use(express.static(path.join(__dirname, 'public')));
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -67,7 +70,6 @@ app.post('/api/generate-mission', async (req, res) => {
           }
         });
 
-        // Break out if request succeeds
         break; 
 
       } catch (err) {
@@ -89,6 +91,11 @@ app.post('/api/generate-mission', async (req, res) => {
     console.error("Gemini Generation Error:", error);
     res.status(500).json({ success: false, error: error.message || "Failed to generate mission." });
   }
+});
+
+// Serve index.html for root path or fallback
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 module.exports = app;
